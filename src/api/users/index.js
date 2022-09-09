@@ -2,6 +2,7 @@
 
 import express from "express"
 import createError from "http-errors"
+import passport from "passport"
 import UserModel from "./model.js"
 import { basicAuthMiddleware } from "../../lib/auth/basic.js"
 import { createAccessToken } from "../../lib/auth/tools.js"
@@ -18,6 +19,14 @@ usersRouter.post("/", async (req, res, next) => {
   } catch (error) {
     next(error)
   }
+})
+usersRouter.get(
+  "/googleLogin",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+)
+usersRouter.get("/googleRedirect", (req, res, next) => {
+  try {
+  } catch (error) {}
 })
 
 usersRouter.get("/", JWTAuthMiddleware, async (req, res, next) => {

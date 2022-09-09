@@ -4,6 +4,7 @@ import express from "express"
 import listEndpoints from "express-list-endpoints"
 import cors from "cors"
 import mongoose from "mongoose"
+import passport from "passport"
 
 import {
   badRequestHandler,
@@ -11,6 +12,7 @@ import {
   notFoundHandler,
   unauthorizedErrorHandler,
 } from "./errorHandlers.js"
+import googleStrategy from "./lib/auth/google.js"
 
 import usersRouter from "./api/users/index.js"
 import blogPostsRouter from "./api/blogPosts/index.js"
@@ -18,8 +20,11 @@ import blogPostsRouter from "./api/blogPosts/index.js"
 const server = express()
 const port = process.env.PORT || 3001
 
+passport.use("google", googleStrategy) // Do not forget to inform passport that we need to use googleStrategy
+
 server.use(cors())
 server.use(express.json())
+server.use(passport.initialize()) // Do not forget to inform Express that we need to use passport
 
 server.use("/posts", blogPostsRouter)
 server.use("/users", usersRouter)
